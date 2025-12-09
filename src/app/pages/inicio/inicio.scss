@@ -1,0 +1,165 @@
+:root {
+            --bg-color: #F0EBE4; /* Fondo general */
+            --card-color: #F6F2EC; /* Color de las tarjetas de estado */
+            --header-color: #000000; /* Color para los títulos de sección */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .dashboard {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* --- Estilos para la sección Estado Actual --- */
+
+        .section-title {
+            color: var(--header-color);
+            font-size: 40px;
+            font-weight: 700;
+            margin: 25px;
+            
+        }
+
+        .stats-grid {
+            display: grid;
+            /* Crea 2 columnas iguales y ajustables */
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .stat-card {
+            background-color: var(--card-color);
+            /* Estilo redondeado del diseño */
+            border-radius: 12px; 
+            background-color: #BCAF9F;
+            box-shadow: 3px 4px  0px #847869;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            /* Flexbox para alinear el contenido dentro de la tarjeta */
+            position: relative; 
+            /* Para posicionar el ícono absoluto */
+            overflow: hidden; 
+        }
+
+        .stat-content {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            padding-right: 80px; /* Espacio para el ícono */
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--number-color);
+            line-height: 1; /* Para reducir el espacio vertical extra */
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        
+        /* Estilos para los íconos de las tarjetas de Estado Actual */
+        .stat-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 48px;
+            color: rgba(0, 0, 0, 0.2); /* Color tenue como en la imagen */
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        /* Icono de Productos */
+        .icon {
+            padding: 5px;
+            height: 58px;
+            width: 58px;
+        }
+        
+
+
+        /* --- Estilos para la sección Acciones --- */
+
+        .actions-grid {
+            display: grid;
+            /* Crea 4 columnas iguales para las acciones */
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 20px;
+            margin: 25px;
+        }
+
+        .action-card {
+            background-color: #F6F2EC;
+            padding: 30px 10px;
+            border-radius: 12px;
+            box-shadow: 3px 4px  0px #BCAF9F;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            /* Estilos de color de fondo específico por tarjeta de acción */
+        }
+        
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 3px 4px  0px #BCAF9F;
+            border-color: #ffffff; /* Borde al pasar el ratón */
+        }
+
+        
+        /* Estilos para el ícono de las acciones (círculo simple y línea gruesa) */
+        .action-card .fa-solid {
+            font-size: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--text-color);
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            line-height: 1;
+        }
+
+        .action-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        /* --- Responsive Design --- */
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr; /* Una sola columna en móviles */
+            }
+            
+            .actions-grid {
+                grid-template-columns: repeat(2, 1fr); /* Dos columnas en tablets */
+            }
+            
+            .stat-number {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .actions-grid {
+                grid-template-columns: 1fr; /* Una sola columna en móviles pequeños */
+            }
+        }

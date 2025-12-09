@@ -1,0 +1,136 @@
+<div class="formulario-producto">
+  <h2>{{ esModoEdicion ? 'Editar Producto' : 'Crear Producto' }}</h2>
+  
+  <form (ngSubmit)="guardar()">
+    <!-- Información básica -->
+    <div class="form-section">
+      <h3>Información del Producto</h3>
+      
+      <div class="form-group">
+        <label>Nombre del Producto *</label>
+        <input type="text" [(ngModel)]="producto.nombre" name="nombre" required placeholder="Ej: Cappuccino">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Categoría *</label>
+          <select [(ngModel)]="producto.categoria" name="categoria" required>
+            <option value="bebidas">Bebidas</option>
+            <option value="comidas">Comidas</option>
+            <option value="postres">Postres</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Precio *</label>
+          <input type="number" [(ngModel)]="producto.precio" name="precio" min="0" step="0.01" required placeholder="0.00">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Descripción</label>
+        <textarea [(ngModel)]="producto.descripcion" name="descripcion" rows="3" placeholder="Describe tu producto..."></textarea>
+      </div>
+
+      <!-- Selector de icono -->
+      <div class="form-group">
+        <label>Imagen del Producto</label>
+        <div class="imagen-section">
+          <!-- Preview -->
+          <div class="imagen-preview">
+            <img *ngIf="esURL(producto.imagen)" 
+                 [src]="producto.imagen" 
+                 [alt]="producto.nombre"
+                 (error)="errorImagen()">
+            <div *ngIf="!esURL(producto.imagen)" class="placeholder-imagen">
+              📷
+              <p>Imagen no válida</p>
+            </div>
+          </div>
+
+          <!-- Input de URL -->
+          <div class="url-input-container">
+            <input type="text" 
+                   [(ngModel)]="producto.imagen" 
+                   name="imagen"
+                   placeholder="https://ejemplo.com/imagen.jpg"
+                   class="input-url">
+            <p class="helper-text">
+              💡 Busca una imagen en Google → Click derecho → "Copiar dirección de imagen" → Pégala aquí
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Receta / Ingredientes -->
+    <div class="form-section">
+      <h3>Receta (Ingredientes) *</h3>
+      
+      <!-- Agregar ingrediente -->
+      <div class="ingrediente-form">
+        <div class="form-row">
+          <div class="form-group flex-2">
+            <label>Insumo</label>
+            <select [(ngModel)]="nuevoIngrediente.nombre_insumo" 
+                    [ngModelOptions]="{standalone: true}"
+                    (change)="actualizarUnidad()">
+              <option value="">Selecciona un insumo</option>
+              <option *ngFor="let insumo of insumos" [value]="insumo.nombre">
+                {{ insumo.nombre }} (Stock: {{ insumo.stock }} {{ insumo.unidad }})
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Cantidad</label>
+            <input type="number" 
+                   [(ngModel)]="nuevoIngrediente.cantidad_necesaria" 
+                   [ngModelOptions]="{standalone: true}"
+                   min="0" 
+                   step="0.01"
+                   placeholder="0.00">
+          </div>
+
+          <div class="form-group">
+            <label>Unidad</label>
+            <input type="text" 
+                   [(ngModel)]="nuevoIngrediente.unidad" 
+                   [ngModelOptions]="{standalone: true}"
+                   readonly
+                   class="readonly-input">
+          </div>
+
+          <div class="form-group btn-group">
+            <button type="button" class="btn-add" (click)="agregarIngrediente()">
+              <span>+</span> Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de ingredientes -->
+      <div class="ingredientes-lista" *ngIf="receta.length > 0">
+        <div class="ingrediente-item" *ngFor="let ingrediente of receta; let i = index">
+          <div class="ingrediente-info">
+            <span class="ingrediente-nombre">{{ ingrediente.nombre_insumo }}</span>
+            <span class="ingrediente-cantidad">{{ ingrediente.cantidad_necesaria }} {{ ingrediente.unidad }}</span>
+          </div>
+          <button type="button" class="btn-remove" (click)="eliminarIngrediente(i)">✕</button>
+        </div>
+      </div>
+
+      <p class="helper-text" *ngIf="receta.length === 0">
+         Agrega al menos un ingrediente para crear el producto
+      </p>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="cancelar()">Cancelar</button>
+      <button type="submit" class="btn-primary">
+        {{ esModoEdicion ? 'Actualizar Producto' : 'Crear Producto' }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,229 @@
+<div class="productos-page">
+    <header class="productos-header">
+        <h1>Nuestros Productos</h1>
+        <p class="subtitle">Descubre nuestro menú</p>
+    </header>
+
+    <!-- Barra de búsqueda -->
+    <div class="search-container">
+        <div class="search-icon">
+            <img src="imagenes/buscador.png" alt="buscar" class="icon">
+        </div>
+        <input 
+            type="text" 
+            placeholder="Buscar productos..." 
+            class="search-input"
+            (input)="buscarProductos($event)"
+            [(ngModel)]="terminoBusqueda">
+    </div>
+
+    <!-- Categorías -->
+    <section class="categorias">
+        <div class="category-filters">
+            <button class="filter-button" [class.active]="categoriaSeleccionada === 'Todas'" (click)="filtrarPorCategoria('Todas')">
+                <span class="filter-label">Todas</span>
+            </button>
+            <button class="filter-button" [class.active]="categoriaSeleccionada === 'bebidas'" (click)="filtrarPorCategoria('bebidas')">
+                <span class="filter-label">Bebidas</span>
+            </button>
+            <button class="filter-button" [class.active]="categoriaSeleccionada === 'comidas'" (click)="filtrarPorCategoria('comidas')">
+                <span class="filter-label">Comidas</span>
+            </button>
+            <button class="filter-button" [class.active]="categoriaSeleccionada === 'postres'" (click)="filtrarPorCategoria('postres')">
+                <span class="filter-label">Postres</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Barra de acciones -->
+    <section class="acciones-section">
+        <div class="acciones-container">
+            <!-- Chips de selección -->
+            <div class="selection-chips" *ngIf="productosSeleccionados.length > 0">
+                <div class="selection-chip" *ngFor="let producto of productosSeleccionados">
+                    <span class="chip-name">{{ producto.nombre }}</span>
+                    <button class="btn-chip-remove" (click)="seleccionarProducto(producto)">x</button>
+                </div>
+                <div class="selection-count">
+                    {{ productosSeleccionados.length }} seleccionado(s)
+                </div>
+            </div>
+            
+            <div class="acciones-buttons">
+                <button class="btn-accion primary" 
+                        [disabled]="productosSeleccionados.length > 0"
+                        (click)="abrirRegistrar()">
+                    Registrar Producto
+                </button>
+                <button class="btn-accion secondary" 
+                        [disabled]="productosSeleccionados.length === 0"
+                        (click)="editarSeleccionados()">
+                    Editar {{ productosSeleccionados.length > 0 ? '(' + productosSeleccionados.length + ')' : '' }}
+                </button>
+                <button class="btn-accion danger" 
+                        [disabled]="productosSeleccionados.length === 0"
+                        (click)="eliminarSeleccionados()">
+                    Eliminar {{ productosSeleccionados.length > 0 ? '(' + productosSeleccionados.length + ')' : '' }}
+                </button>
+                <button class="btn-accion clear" 
+                        [disabled]="productosSeleccionados.length === 0"
+                        (click)="limpiarSeleccion()">
+                    Limpiar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Estado de carga -->
+    <div *ngIf="cargando" class="loading-state">
+        <div class="skeleton-card" *ngFor="let item of [1,2,3,4,5,6,7,8]"></div>
+    </div>
+
+    <!-- Estado vacío -->
+    <div *ngIf="!cargando && productosFiltrados.length === 0" class="empty-state">
+        <h3>No se encontraron productos</h3>
+        <p>{{ terminoBusqueda ? 'Intenta con otro término de búsqueda' : 'No hay productos registrados' }}</p>
+    </div>
+
+    <!-- Grid de productos -->
+    <section class="productos-list" *ngIf="!cargando && productosFiltrados.length > 0">
+        <h2 class="section-title">{{ categoriaSeleccionada === 'Todas' ? 'Todos los Productos' : getCategoriaTexto(categoriaSeleccionada) }}</h2>
+        
+        <div class="productos-grid">
+            <div class="producto-card" 
+                 *ngFor="let producto of productosFiltrados"
+                 [class.selected]="estaSeleccionado(producto)"
+                 (click)="seleccionarProducto(producto)">
+                
+                <!-- Indicador de stock -->
+                <span class="stock-indicator" [ngClass]="getEstadoStockClass(producto.estado_stock)"></span>
+                
+                <!-- Imagen del producto -->
+                <div class="producto-imagen">
+                    <img *ngIf="esURL(producto.imagen)" 
+                         [src]="producto.imagen" 
+                         [alt]="producto.nombre"
+                         class="imagen-producto">
+                    <div *ngIf="!esURL(producto.imagen)" class="imagen-icono">
+                        {{ producto.imagen || ' ' }}
+                    </div>
+                </div>
+                
+                <!-- Contenido -->
+                <div class="producto-contenido">
+                    <h3 class="producto-nombre">{{ producto.nombre }}</h3>
+                    <span class="ver-mas" (click)="verDetalles(producto, $event)"></span>
+                    
+                    <!-- Información expandida -->
+                    <div class="producto-info">
+                        <div class="info-item">
+                            <span class="info-label">Precio:</span>
+                            <span class="info-valor precio">${{ producto.precio | number:'1.2-2' }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Stock:</span>
+                            <span class="info-valor" [ngClass]="getEstadoStockClass(producto.estado_stock)">
+                                {{ producto.unidades_disponibles || 0 }} Unidades
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Ingredientes:</span>
+                            <span class="info-valor link" (click)="verDetalles(producto, $event)">ver más</span>
+                        </div>
+                        <span class="categoria-badge">{{ getCategoriaTexto(producto.categoria) }}</span>
+                    </div>
+                </div>
+
+                <!-- Indicador de selección -->
+                <div class="selection-indicator" *ngIf="estaSeleccionado(producto)">
+                    <span class="checkmark">✓</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de detalles -->
+<div *ngIf="mostrarDetalles && productoDetalle" class="modal-overlay" (click)="cerrarDetalles()">
+  <div class="modal-content detalles-modal" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="cerrarDetalles()">✕</button>
+    
+    <div class="modal-header">
+      <div class="producto-imagen-grande">
+        <img 
+          *ngIf="esURL(productoDetalle?.imagen)" 
+          [src]="productoDetalle?.imagen" 
+          alt="{{ productoDetalle?.nombre }}"
+          (error)="imagenError = true">
+        
+        <div *ngIf="!esURL(productoDetalle?.imagen) || imagenError" class="imagen-placeholder">
+          {{ (productoDetalle?.imagen || productoDetalle?.nombre || 'P').substring(0, 2).toUpperCase() }}
+        </div>
+      </div>
+
+      <div class="producto-info-principal">
+        <h2>{{ productoDetalle?.nombre }}</h2>
+        <span class="precio-grande">${{ productoDetalle?.precio | number:'1.0-2' }}</span>
+        <span class="categoria-tag">{{ getCategoriaTexto(productoDetalle?.categoria ?? '') }}</span>
+      </div>
+    </div>
+
+    <div class="modal-body">
+      <!-- Descripción -->
+      <div class="descripcion-section" *ngIf="productoDetalle?.descripcion">
+        <h3>Descripción</h3>
+        <p>{{ productoDetalle?.descripcion }}</p>
+      </div>
+
+      <!-- Disponibilidad -->
+      <div class="disponibilidad-section">
+        <h3>Disponibilidad</h3>
+        <div class="disponibilidad-info">
+          <span class="disponibilidad-numero" [ngClass]="getEstadoStockClass(productoDetalle?.estado_stock)">
+            {{ productoDetalle?.unidades_disponibles || 0 }}
+          </span>
+          <span class="disponibilidad-texto">unidades disponibles</span>
+        </div>
+        <span class="estado-badge" [ngClass]="getEstadoStockClass(productoDetalle?.estado_stock)">
+          {{ getEstadoStockTexto(productoDetalle?.estado_stock) }}
+        </span>
+      </div>
+
+      <!-- Receta / Ingredientes -->
+      <div class="receta-section" *ngIf="productoDetalle?.receta?.length">
+        <h3>Receta (Ingredientes)</h3>
+        <div class="ingredientes-lista">
+          <div class="ingrediente-item" *ngFor="let ingrediente of productoDetalle.receta">
+            <div class="ingrediente-nombre">
+              <span class="nombre">{{ ingrediente.nombre_insumo }}</span>
+              <span class="cantidad">{{ ingrediente.cantidad_necesaria }} {{ ingrediente.unidad }}</span>
+            </div>
+            <div class="ingrediente-stock">
+              <span class="disponible">Stock: {{ ingrediente.stock_disponible }} {{ ingrediente.unidad }}</span>
+              <span class="posibles">({{ ingrediente.unidades_posibles }} unidades posibles de hacer)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Modal formulario de producto -->
+    <div *ngIf="mostrarFormulario" class="modal-overlay" (click)="cerrarFormulario()">
+        <div class="modal-content form-modal" (click)="$event.stopPropagation()">
+            <button class="close-btn" (click)="cerrarFormulario()">✕</button>
+            
+            <!-- Indicador de cola -->
+            <div class="queue-indicator" *ngIf="editandoCola && colaEdicion.length > 0">
+                <span>Editando {{ productosSeleccionados.length - colaEdicion.length + 1 }} de {{ productosSeleccionados.length }}</span>
+                <span class="queue-remaining">{{ colaEdicion.length }} restante(s)</span>
+            </div>
+
+            <app-formulario-productos 
+                [idEditar]="idParaEditar"
+                [insumos]="insumosDisponibles"
+                (cerrar)="cerrarFormulario()">
+            </app-formulario-productos>
+        </div>
+    </div>
+</div>

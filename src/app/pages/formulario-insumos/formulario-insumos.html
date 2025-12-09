@@ -1,0 +1,71 @@
+<div class="form-container">
+
+    @if (idEditar) {
+        <h2>Editar Insumo</h2>
+    } @else {
+        <h2>Nuevo Insumo</h2>
+    }
+
+    @if (error) {
+        <div class="error-message">{{ error }}</div>
+    }
+
+    <form [formGroup]="insumoForm" (ngSubmit)="guardar()">
+
+        <label>Nombre *</label>
+        <input type="text" formControlName="nombre">
+
+        <label>Categoría *</label>
+        <select formControlName="categoria">
+            <option value="Insumos">Insumos</option>
+            <option value="Productos">Productos</option>
+        </select>
+
+        <label>Proveedor *</label>
+        <select formControlName="proveedor">
+            <option value="">Selecciona un proveedor</option>
+            <option *ngFor="let p of proveedores" [value]="p.nombre">
+                {{ p.nombre }}
+            </option>
+        </select>
+
+        <label>Stock *</label>
+        <input type="number" formControlName="stock" min="0">
+
+        <label>Unidad *</label>
+        <select formControlName="unidad">
+            <option value="kg">Kilogramos (kg)</option>
+            <option value="g">Gramos (g)</option>
+            <option value="l">Litros (L)</option>
+            <option value="ml">Mililitros (ml)</option>
+            <option value="pz">Piezas (pz)</option>
+            <option value="unidades">Unidades</option>
+        </select>
+
+        <label>Stock Mínimo *</label>
+        <input type="number" formControlName="stock_minimo" min="0">
+
+        <label>Precio *</label>
+        <input type="number" formControlName="precio" min="0" step="0.01">
+
+        <label>Fecha de Caducidad</label>
+        <input type="date" formControlName="fecha_caducidad">
+
+        <div class="form-buttons">
+            <button type="button" class="btn-cancelar" (click)="cancelar()">
+                Cancelar
+            </button>
+            <button type="submit" class="btn-guardar" [disabled]="insumoForm.invalid || cargando">
+                @if (cargando) {
+                    Guardando...
+                } @else if (idEditar) {
+                    Actualizar
+                } @else {
+                    Guardar
+                }
+            </button>
+        </div>
+
+    </form>
+
+</div>

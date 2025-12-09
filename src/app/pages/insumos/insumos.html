@@ -1,0 +1,172 @@
+<div class="insumos-page">
+    <header class="insumos-header">
+        <h1>Nuestros Insumos</h1>
+        <p class="subtitle">Descubre todos nuestros insumos!</p>
+    </header>
+
+    <!-- Barra de búsqueda -->
+    <div class="search-container">
+        <div class="search-icon">
+            <img src="imagenes/buscador.png" alt="buscar" class="icon">
+        </div>
+        <input 
+            type="text" 
+            placeholder="search" 
+            class="search-input"
+            (input)="buscarInsumos($event)"
+            [(ngModel)]="terminoBusqueda">
+    </div>
+
+    <!-- Categorías -->
+    <section class="categorias">
+        <div class="category-filters">
+            <button 
+                class="filter-button" 
+                [class.active]="categoriaSeleccionada === 'Todas'"
+                (click)="filtrarPorCategoria('Todas')">
+                <span class="filter-label">Todas</span>
+            </button>
+            <button 
+                class="filter-button"
+                [class.active]="categoriaSeleccionada === 'Insumos'"
+                (click)="filtrarPorCategoria('Insumos')">
+                <span class="filter-label">Insumos</span>
+            </button>
+            <button 
+                class="filter-button"
+                [class.active]="categoriaSeleccionada === 'Productos'"
+                (click)="filtrarPorCategoria('Productos')">
+                <span class="filter-label">Productos</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Barra de acciones -->
+    <section class="acciones-section">
+        <div class="acciones-container">
+            <!-- Chips de selección -->
+            <div class="selection-chips" *ngIf="insumosSeleccionados.length > 0">
+                <div class="selection-chip" *ngFor="let insumo of insumosSeleccionados">
+                    <span class="chip-name">{{ insumo.nombre }}</span>
+                    <button class="btn-chip-remove" (click)="seleccionarInsumo(insumo)">×</button>
+                </div>
+                <div class="selection-count">
+                    {{ insumosSeleccionados.length }} seleccionado(s)
+                </div>
+            </div>
+            
+            <div class="acciones-buttons">
+                <button class="btn-accion primary" 
+                        [class.disabled]="insumosSeleccionados.length > 0"
+                        [disabled]="insumosSeleccionados.length > 0"
+                        (click)="abrirRegistrar()">
+                    Registrar Insumo
+                </button>
+                <button class="btn-accion secondary" 
+                        [class.disabled]="insumosSeleccionados.length === 0"
+                        [disabled]="insumosSeleccionados.length === 0"
+                        (click)="editarSeleccionados()">
+                    Editar {{ insumosSeleccionados.length > 0 ? '(' + insumosSeleccionados.length + ')' : '' }}
+                </button>
+                <button class="btn-accion danger" 
+                        [class.disabled]="insumosSeleccionados.length === 0"
+                        [disabled]="insumosSeleccionados.length === 0"
+                        (click)="eliminarSeleccionados()">
+                    Eliminar {{ insumosSeleccionados.length > 0 ? '(' + insumosSeleccionados.length + ')' : '' }}
+                </button>
+                <button class="btn-accion pedido" 
+                        [class.disabled]="insumosSeleccionados.length === 0"
+                        [disabled]="insumosSeleccionados.length === 0"
+                        (click)="abrirPedido()">
+                    Pedir {{ insumosSeleccionados.length > 0 ? '(' + insumosSeleccionados.length + ')' : '' }}
+                </button>
+                <button class="btn-accion clear" 
+                        [class.disabled]="insumosSeleccionados.length === 0"
+                        [disabled]="insumosSeleccionados.length === 0"
+                        (click)="limpiarSeleccion()">
+                    Limpiar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Estado de carga -->
+    <div *ngIf="cargando" class="loading-state">
+        <div class="skeleton-card" *ngFor="let item of [1,2,3,4]"></div>
+    </div>
+
+    <!-- Estado vacío -->
+    <div *ngIf="!cargando && insumosFiltrados.length === 0" class="empty-state">
+        <h3>No se encontraron insumos</h3>
+        <p>{{ terminoBusqueda ? 'Intenta con otro término de búsqueda' : 'Comienza agregando tu primer insumo' }}</p>
+    </div>
+
+    <!-- Lista de insumos -->
+    <section class="insumos-list" *ngIf="!cargando && insumosFiltrados.length > 0">
+        <h2 class="section-title">{{ categoriaSeleccionada }}</h2>
+        <div class="list-grid">
+            <div class="insumo-card" 
+                 *ngFor="let insumo of insumosFiltrados"
+                 [class.selected]="estaSeleccionado(insumo)"
+                 (click)="seleccionarInsumo(insumo)">
+                
+                <!-- Punto de estado en esquina -->
+                <div [ngClass]="getDotClass(insumo)"></div>
+
+                <!-- Nombre grande -->
+                <h3 class="insumo-nombre">{{ insumo.nombre }}</h3>
+
+                <!-- Información -->
+                <div class="insumo-info">
+                    <p><strong>Stock:</strong> 
+                        <span [class.stock-verde]="getEstadoStock(insumo) === 'stock-ok'" 
+                        [class.stock-amarillo]="getEstadoStock(insumo) === 'stock-bajo'"
+                        [class.stock-rojo]="getEstadoStock(insumo) === 'sin-stock'">{{ insumo.stock }} {{ insumo.unidad }}</span></p>
+                    <p><strong>Proveedor:</strong> {{ insumo.proveedor }}</p>
+                    <p><strong>Caducidad:</strong> {{ insumo.fecha_caducidad | date:'dd/MM/yyyy' }}</p>
+                    <p><strong>Stock Mínimo:</strong> {{ insumo.stock_minimo }} {{ insumo.unidad }}</p>
+                    <p><strong>Precio:</strong> ${{ insumo.precio }}</p>
+                    <p><strong>Categoría:</strong> {{ insumo.categoria }}</p>
+                </div>
+
+                <!-- Indicador de selección -->
+                <div class="selection-indicator" *ngIf="estaSeleccionado(insumo)">
+                    <span class="checkmark">✓</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal formulario de insumo -->
+    <div *ngIf="mostrarFormulario" class="modal-overlay" (click)="cerrarFormulario()">
+        <div class="modal-content form-modal" (click)="$event.stopPropagation()">
+            <button class="close-btn" (click)="cerrarFormulario()">✕</button>
+            
+            <!-- Indicador de cola -->
+            <div class="queue-indicator" *ngIf="editandoCola && colaEdicion.length > 0">
+                <span> Editando {{ insumosSeleccionados.length - colaEdicion.length + 1 }} de {{ insumosSeleccionados.length }}</span>
+                <span class="queue-remaining">{{ colaEdicion.length }} restante(s)</span>
+            </div>
+
+            <app-formulario-insumos 
+                [idEditar]="idParaEditar"
+                [proveedores]="proveedores"
+                (cerrar)="cerrarFormulario()">
+            </app-formulario-insumos>
+        </div>
+    </div>
+
+    <!-- Modal formulario de pedido -->
+    <div *ngIf="mostrarFormularioPedido" class="modal-overlay" (click)="cerrarFormularioPedido()">
+        <div class="modal-content form-modal" (click)="$event.stopPropagation()">
+            <button class="close-btn" (click)="cerrarFormularioPedido()">✕</button>
+            
+            <app-formulario-pedido 
+                [insumosSeleccionados]="insumosSeleccionados"
+                [proveedores]="proveedores"
+                (cerrar)="cerrarFormularioPedido()">
+            </app-formulario-pedido>
+        </div>
+    </div>
+
+</div>

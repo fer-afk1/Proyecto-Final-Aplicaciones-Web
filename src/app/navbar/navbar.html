@@ -1,0 +1,59 @@
+<nav class="navbar" *ngIf="isLoggedIn">
+    <a routerLink="/" class="logo-container">
+        <img src="imagenes/Logo.png" alt="Logo Cafetería" class="logo">
+        <span class="cafe-name">Coffeshop</span>
+        <div class="mobile-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </a>
+    
+    <ul class="nav-links">
+        <li class="nav-item">
+            <a routerLink="/productos" class="nav-link" routerLinkActive="active">
+                <i class="fas fa-box"></i> Productos
+            </a>
+        </li>
+        <li class="nav-item">
+            <a routerLink="/proveedores" class="nav-link" routerLinkActive="active">
+                <i class="fas fa-truck"></i> Proveedores
+            </a>
+        </li>
+        <li class="nav-item">
+            <a routerLink="/insumos" class="nav-link" routerLinkActive="active">
+                <i class="fas fa-box-open"></i> Insumos
+            </a>
+        </li>
+        <li class="nav-item">
+            <a routerLink="/pedidos" class="nav-link" routerLinkActive="active">
+                <i class="fas fa-clipboard-list"></i> Pedidos
+            </a>
+        </li>
+        <li class="nav-item">
+            <a routerLink="/alertas" class="nav-link alert-link" routerLinkActive="active">
+                <img src="imagenes/notificacion.png" alt="Alertas" class="alert-image">
+            </a>
+        </li>
+        
+        <!-- Usuario con dropdown -->
+        <li class="nav-item user-section">
+            <div class="user-menu" (click)="toggleDropdown()">
+                <img src="imagenes/perfil.png" alt="Alertas" class="user-icon">
+                <span class="user-name">{{ usuario?.usuario || 'Admin' }}</span>
+                <i class="fas fa-chevron-down dropdown-arrow" [class.rotate]="isDropdownOpen"></i>
+            </div>
+
+            <!-- Dropdown Menu -->
+            <div class="user-dropdown" *ngIf="isDropdownOpen">
+                <div class="dropdown-content">
+                    <p class="dropdown-question">¿Desea abandonar la sesión?</p>
+                    <button (click)="logout()" class="logout-btn-dropdown">
+                        <i class="cerrar"></i> Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </li>
+    </ul>
+</nav>
+
+<!-- Overlay para cerrar el dropdown al hacer clic afuera -->
+<div class="dropdown-overlay" *ngIf="isDropdownOpen" (click)="toggleDropdown()"></div>
