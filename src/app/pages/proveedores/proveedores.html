@@ -1,0 +1,153 @@
+<div class="proveedores-page">
+    <header class="proveedores-header">
+        <h1>Nuestros Proveedores</h1>
+        <p class="subtitle">Descubre todos nuestros proveedores!</p>
+    </header>
+
+    <!-- Barra de búsqueda -->
+    <div class="search-container">
+        <div class="search-icon">
+            <img src="imagenes/buscador.png" alt="buscar" class="icon">
+        </div>
+        <input 
+            type="text" 
+            placeholder="search" 
+            class="search-input"
+            (input)="buscarProveedores($event)"
+            [(ngModel)]="terminoBusqueda">
+    </div>
+
+    <!-- Categorías -->
+    <section class="categorias">
+        <div class="category-filters">
+            <button 
+                class="filter-button" 
+                [class.active]="categoriaSeleccionada === 'Todas'"
+                (click)="filtrarPorCategoria('Todas')">
+                <span class="filter-label">Todas</span>
+            </button>
+            <button 
+                class="filter-button"
+                [class.active]="categoriaSeleccionada === 'Insumos'"
+                (click)="filtrarPorCategoria('Insumos')">
+                <span class="filter-label">Insumos</span>
+            </button>
+            <button 
+                class="filter-button"
+                [class.active]="categoriaSeleccionada === 'Productos'"
+                (click)="filtrarPorCategoria('Productos')">
+                <span class="filter-label">Productos</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Barra de acciones con selección múltiple -->
+    <section class="acciones-section">
+        <div class="acciones-container">
+            <!-- Mostrar chips de seleccionados -->
+            <div class="selection-chips" *ngIf="proveedoresSeleccionados.length > 0">
+                <div class="selection-chip" *ngFor="let proveedor of proveedoresSeleccionados">
+                    <span class="chip-name">{{ proveedor.nombre }}</span>
+                    <button class="btn-chip-remove" (click)="seleccionarProveedor(proveedor)">×</button>
+                </div>
+                <div class="selection-count">
+                    {{ proveedoresSeleccionados.length }} seleccionado(s)
+                </div>
+            </div>
+            
+            <div class="acciones-buttons">
+                <button class="btn-accion primary" 
+                        [class.disabled]="proveedoresSeleccionados.length > 0"
+                        [disabled]="proveedoresSeleccionados.length > 0"
+                        (click)="abrirRegistrar()">
+                    Registrar Proveedor
+                </button>
+                <button class="btn-accion secondary" 
+                        [class.disabled]="proveedoresSeleccionados.length === 0"
+                        [disabled]="proveedoresSeleccionados.length === 0"
+                        (click)="editarSeleccionados()">
+                    Editar {{ proveedoresSeleccionados.length > 0 ? '(' + proveedoresSeleccionados.length + ')' : '' }}
+                </button>
+                <button class="btn-accion danger" 
+                        [class.disabled]="proveedoresSeleccionados.length === 0"
+                        [disabled]="proveedoresSeleccionados.length === 0"
+                        (click)="eliminarSeleccionados()">
+                    Eliminar {{ proveedoresSeleccionados.length > 0 ? '(' + proveedoresSeleccionados.length + ')' : '' }}
+                </button>
+                <button class="btn-accion clear" 
+                        [class.disabled]="proveedoresSeleccionados.length === 0"
+                        [disabled]="proveedoresSeleccionados.length === 0"
+                        (click)="limpiarSeleccion()">
+                    Limpiar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Estado de carga -->
+    <div *ngIf="cargando" class="loading-state">
+        <div class="skeleton-card" *ngFor="let item of [1,2,3,4]"></div>
+    </div>
+
+    <!-- Estado vacío -->
+    <div *ngIf="!cargando && proveedoresFiltrados.length === 0" class="empty-state">
+        <div class="empty-icon">📦</div>
+        <h3>No se encontraron proveedores</h3>
+        <p>{{ terminoBusqueda ? 'Intenta con otro término de búsqueda' : 'Comienza agregando tu primer proveedor' }}</p>
+    </div>
+
+    <!-- Lista de proveedores -->
+    <section class="proveedores-list" *ngIf="!cargando && proveedoresFiltrados.length > 0">
+        <h2 class="section-title">{{ categoriaSeleccionada }}</h2>
+        <div class="list-grid">
+            <div class="proveedor-card" 
+                 *ngFor="let proveedor of proveedoresFiltrados"
+                 [class.selected]="estaSeleccionado(proveedor)"
+                 (click)="seleccionarProveedor(proveedor)">
+                
+                <!-- Indicador de selección -->
+                <div class="selection-indicator" *ngIf="estaSeleccionado(proveedor)">
+                    <span class="checkmark">✓</span>
+                </div>
+
+                <div class="card-header">
+                    <div class="initial-circle" [style.background-color]="getColorFromName(proveedor.nombre)">
+                        {{ proveedor.nombre[0] | uppercase }}
+                    </div>
+                    <div class="name-details">
+                        <div class="name-company">{{ proveedor.nombre }}</div>
+                        <div class="tags">{{ proveedor.item }} · {{ proveedor.categoria }}</div>
+                    </div>
+                    <div [ngClass]="getDotClass(proveedor.categoria)"></div>
+                </div>
+
+                <div class="contact-info">
+                    <p><strong>Teléfono:</strong> {{ proveedor.telefono || '—' }}</p>
+                    <p><strong>Correo:</strong> {{ proveedor.correo }}</p>
+                    <p><strong>Dirección:</strong> {{ proveedor.direccion }}</p>
+                    <p><strong>Contacto:</strong> {{ proveedor.contacto }}</p>
+                    <p><strong>Registro:</strong> {{ proveedor.fecha_registro | date:'dd/MM/yyyy' }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal del formulario -->
+    <div *ngIf="mostrarFormulario" class="modal-overlay" (click)="cerrarFormulario()">
+        <div class="modal-content form-modal" (click)="$event.stopPropagation()">
+            <button class="close-btn" (click)="cerrarFormulario()">✕</button>
+            
+            <!-- Indicador de cola de edición -->
+            <div class="queue-indicator" *ngIf="editandoCola && colaEdicion.length > 0">
+                <span> Editando {{ proveedoresSeleccionados.length - colaEdicion.length + 1 }} de {{ proveedoresSeleccionados.length }}</span>
+                <span class="queue-remaining">{{ colaEdicion.length }} restante(s)</span>
+            </div>
+
+            <app-formulario-proveedores 
+                [idEditar]="idParaEditar"
+                (cerrar)="cerrarFormulario()">
+            </app-formulario-proveedores>
+        </div>
+    </div>
+
+</div>

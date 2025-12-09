@@ -1,0 +1,123 @@
+/* ===== FORMULARIO DE PROVEEDORES ===== */
+.form-container {
+    padding: 24px;
+    max-width: 450px;
+    margin: 0 auto;
+
+    h2 {
+        color: var(--dark-brown);
+        margin-bottom: 24px;
+        font-size: 24px;
+        font-weight: 700;
+        border-bottom: 2px solid var(--border-light);
+        padding-bottom: 10px;
+    }
+
+    .error-message {
+        background: #fee2e2;
+        color: #dc2626;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+        border: 2px solid #fecaca;
+    }
+
+    label {
+        display: block;
+        margin-top: 10px;
+        font-weight: 600;
+        color: var(--text-dark);
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 10px 12px;
+        margin-top: 3px;
+        border-radius: 8px;
+        border: 2px solid var(--border-light);
+        font-size: 14px;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+
+    input:focus, select:focus {
+        outline: none;
+        border-color: var(--dark-brown);
+        box-shadow: 0 0 0 3px rgba(45, 42, 15, 0.1);
+    }
+
+    small {
+        color: #dc2626;
+        font-size: 12px;
+        display: block;
+        margin-top: 4px;
+    }
+
+    .form-buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 2px solid var(--border-light);
+    }
+
+    .btn-cancelar, .btn-guardar {
+        flex: 1;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancelar {
+        background: #e5e7eb;
+        color: var(--text-dark);
+        border: 2px solid var(--border-light);
+    }
+
+    .btn-cancelar:hover {
+        background: #d1d5db;
+    }
+
+    .btn-guardar {
+        background: #2d2a0f;
+        color: white;
+    }
+
+    .btn-guardar:hover {
+        background: #000000;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(45, 42, 15, 0.25);
+    }
+
+    .btn-guardar:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+        opacity: 0.6;
+    }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+    .form-container {
+        padding: 16px;
+
+        .form-buttons {
+            flex-direction: column;
+        }
+
+        .btn-cancelar,
+        .btn-guardar {
+            width: 100%;
+        }
+    }
+}

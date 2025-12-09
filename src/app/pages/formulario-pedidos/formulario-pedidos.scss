@@ -1,0 +1,220 @@
+/* ===== FORMULARIO DE PEDIDO ===== */
+.formulario-pedido {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px;
+    background-color: #ffffff;
+    border-radius: 12px;
+}
+
+h2 {
+    color: var(--dark-brown);
+    border-bottom: 2px solid var(--border-light);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+h3 {
+    color: var(--text-dark);
+    font-size: 18px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.form-section {
+    padding: 20px 0;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* ===== CAMPOS DE FORMULARIO ===== */
+.form-group {
+    margin-bottom: 16px;
+    
+    label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+
+    input:not([type="checkbox"]),
+    select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 2px solid var(--border-light);
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        font-family: inherit;
+    }
+
+    input:not(.readonly-input):focus,
+    select:focus {
+        outline: none;
+        border-color: var(--dark-brown);
+        box-shadow: 0 0 0 3px rgba(45, 42, 15, 0.1);
+    }
+}
+
+/* ===== CAMPOS DE SOLO LECTURA ===== */
+.readonly-input {
+    background-color: #f9fafb !important;
+    color: var(--text-gray) !important;
+    cursor: default !important;
+    border: 2px solid #e5e7eb !important;
+}
+
+.readonly-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: #e5e7eb !important;
+}
+
+/* ===== INDICADOR DE CÁLCULO ===== */
+.precio-calculado {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--text-gray);
+    font-style: italic;
+}
+
+/* ===== GRUPOS INLINE ===== */
+.form-group.inline {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group.inline label {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* ===== GRID DE INPUTS DE INSUMO ===== */
+.insumo-inputs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 10px;
+}
+
+@media (max-width: 1200px) {
+    .insumo-inputs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .insumo-inputs {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== LISTA DE INSUMOS ===== */
+.insumos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.insumo-item {
+    padding: 20px;
+    margin-bottom: 0;
+    border: 2px solid var(--border-light);
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(62, 59, 19, 0.08);
+    transition: all 0.3s ease;
+}
+
+.insumo-item:hover {
+    box-shadow: 0 6px 16px rgba(62, 59, 19, 0.12);
+    border-color: var(--light-brown);
+}
+
+.insumo-info {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    strong {
+        font-size: 18px;
+        color: var(--dark-brown);
+        font-weight: 700;
+    }
+    
+    .proveedor {
+        font-size: 13px;
+        color: var(--text-gray);
+        background-color: #f3f4f6;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+}
+
+/* ===== BOTONES DE ACCIÓN ===== */
+.form-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid var(--border-light);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: #2d2a0f;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(45, 42, 15, 0.25);
+}
+
+.btn-secondary {
+    background-color: #e5e7eb;
+    color: var(--text-dark);
+    border: 2px solid var(--border-light);
+}
+
+.btn-secondary:hover {
+    background-color: #d1d5db;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .formulario-pedido {
+        padding: 16px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
+}

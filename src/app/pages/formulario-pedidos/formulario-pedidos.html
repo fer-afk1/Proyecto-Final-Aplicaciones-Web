@@ -1,0 +1,139 @@
+<div class="formulario-pedido">
+  <h2>{{ esModoEdicion ? 'Editar Pedido' : 'Crear Pedido' }}</h2>
+  
+  <form (ngSubmit)="guardar()">
+    <!-- Insumos seleccionados (modo crear múltiples) -->
+    <div class="form-section" *ngIf="!esModoEdicion">
+      <h3>Insumos a Pedir:</h3>
+      <div class="insumos-lista">
+        <div class="insumo-item" *ngFor="let insumo of insumosSeleccionados; let i = index">
+          <div class="insumo-info">
+            <strong>{{ insumo.nombre }}</strong>
+            <span class="proveedor">{{ insumo.proveedor }}</span>
+          </div>
+          
+          <div class="insumo-inputs">
+            <!-- ✅ Precio unitario (SOLO LECTURA) -->
+            <div class="form-group inline">
+              <label>Precio Unitario:</label>
+              <input type="number" 
+                     [value]="preciosUnitarios[i]" 
+                     [name]="'precio_unitario_' + i"
+                     readonly
+                     class="readonly-input">
+            </div>
+
+            <div class="form-group inline">
+              <label>Cantidad:</label>
+              <input type="number" 
+                     [(ngModel)]="cantidades[i]" 
+                     [name]="'cantidad_' + i"
+                     (ngModelChange)="actualizarPrecio(i)"
+                     min="1" 
+                     required>
+            </div>
+            
+            <!-- ✅ Unidad (SOLO LECTURA) -->
+            <div class="form-group inline">
+              <label>Unidad:</label>
+              <input type="text" 
+                     [value]="unidades[i]" 
+                     [name]="'unidad_' + i"
+                     readonly
+                     class="readonly-input">
+            </div>
+            
+            <!-- ✅ Precio total calculado automáticamente (SOLO LECTURA) -->
+            <div class="form-group inline">
+              <label>Precio Total:</label>
+              <input type="number" 
+                     [value]="precios[i]" 
+                     [name]="'precio_' + i"
+                     readonly
+                     class="readonly-input">
+              <span class="precio-calculado">
+                ({{ cantidades[i] }} × ${{ preciosUnitarios[i] | number:'1.2-2' }})
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Campos para edición individual -->
+    <div class="form-section" *ngIf="esModoEdicion">
+      <div class="form-group">
+        <label>Proveedor:</label>
+        <input type="text" [(ngModel)]="pedidoEditar.proveedor" name="proveedor" readonly class="readonly-input">
+      </div>
+
+      <div class="form-group">
+        <label>Item:</label>
+        <input type="text" [(ngModel)]="pedidoEditar.item" name="item" readonly class="readonly-input">
+      </div>
+
+      <!-- ✅ Precio unitario en modo edición (SOLO LECTURA) -->
+      <div class="form-group">
+        <label>Precio Unitario:</label>
+        <input type="number" 
+               [value]="precioUnitarioEdicion" 
+               name="precio_unitario"
+               readonly
+               class="readonly-input">
+      </div>
+
+      <div class="form-group">
+        <label>Cantidad:</label>
+        <input type="number" 
+               [(ngModel)]="pedidoEditar.cantidad" 
+               name="cantidad" 
+               (ngModelChange)="actualizarPrecioEdicion()"
+               min="1" 
+               required>
+      </div>
+
+      <!-- ✅ Unidad (SOLO LECTURA) -->
+      <div class="form-group">
+        <label>Unidad:</label>
+        <input type="text" 
+               [(ngModel)]="pedidoEditar.unidad" 
+               name="unidad" 
+               readonly
+               class="readonly-input">
+      </div>
+
+      <!-- ✅ Precio total calculado automáticamente (SOLO LECTURA) -->
+      <div class="form-group">
+        <label>Precio Total:</label>
+        <input type="number" 
+               [value]="pedidoEditar.precio" 
+               name="precio" 
+               readonly
+               class="readonly-input">
+        <span class="precio-calculado">
+          ({{ pedidoEditar.cantidad }} × ${{ precioUnitarioEdicion | number:'1.2-2' }})
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Estado:</label>
+        <select [(ngModel)]="pedidoEditar.estado" name="estado" required>
+          <option value="pendiente">Pendiente</option>
+          <option value="entregado">Entregado</option>
+          <option value="cancelado">Cancelado</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Fecha de llegada estimada (para ambos modos) -->
+    <div class="form-group">
+      <label>Fecha de Llegada Estimada:</label>
+      <input type="date" [(ngModel)]="fechaLlegada" name="fecha_llegada" required>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="cancelar()">Cancelar</button>
+      <button type="submit" class="btn-primary">{{ esModoEdicion ? 'Actualizar' : 'Crear Pedido(s)' }}</button>
+    </div>
+  </form>
+</div>

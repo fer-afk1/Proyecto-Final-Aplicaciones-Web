@@ -1,0 +1,142 @@
+<div class="pedidos-page">
+    <header class="pedidos-header">
+        <h1>Nuestros Pedidos</h1>
+        <p class="subtitle">Gestiona todos tus pedidos</p>
+    </header>
+
+    <!-- Barra de búsqueda -->
+    <div class="search-container">
+        <div class="search-icon">
+            <img src="imagenes/buscador.png" alt="buscar" class="icon">
+        </div>
+        <input 
+            type="text" 
+            placeholder="search" 
+            class="search-input"
+            (input)="buscarPedidos($event)"
+            [(ngModel)]="terminoBusqueda">
+    </div>
+
+    <!-- Categorías -->
+    <section class="categorias">
+        <div class="category-filters">
+            <button class="filter-button" [class.active]="categoriaSeleccionada === 'Todas'" (click)="filtrarPorCategoria('Todas')">
+                <span class="filter-label">Todas</span>
+            </button>
+            <button class="filter-button" [class.active]="categoriaSeleccionada === 'Insumos'" (click)="filtrarPorCategoria('Insumos')">
+                <span class="filter-label">Insumos</span>
+            </button>
+            <button class="filter-button" [class.active]="categoriaSeleccionada === 'Productos'" (click)="filtrarPorCategoria('Productos')">
+                <span class="filter-label">Productos</span>
+            </button>
+            <button class="filter-button" [class.active]="categoriaSeleccionada === 'Pendiente'" (click)="filtrarPorCategoria('Pendiente')">
+                <span class="filter-label">Pendiente</span>
+            </button>
+            <button class="filter-button" [class.active]="categoriaSeleccionada === 'Entregado'" (click)="filtrarPorCategoria('Entregado')">
+                <span class="filter-label">Entregado</span>
+            </button>
+            <button class="filter-button" [class.active]="categoriaSeleccionada === 'Cancelado'" (click)="filtrarPorCategoria('Cancelado')">
+                <span class="filter-label">Cancelado</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Barra de acciones -->
+    <section class="acciones-section">
+        <div class="acciones-container">
+            <!-- Chips de selección -->
+            <div class="selection-chips" *ngIf="pedidosSeleccionados.length > 0">
+                <div class="selection-chip" *ngFor="let pedido of pedidosSeleccionados">
+                    <span class="chip-name">{{ formatearIdPedido(pedido.id_pedido) }}</span>
+                    <button class="btn-chip-remove" (click)="seleccionarPedido(pedido)">×</button>
+                </div>
+                <div class="selection-count">
+                    {{ pedidosSeleccionados.length }} seleccionado(s)
+                </div>
+            </div>
+            
+            <div class="acciones-buttons">
+                <button class="btn-accion entregado" 
+                        [disabled]="pedidosSeleccionados.length === 0"
+                        (click)="marcarComoEntregado()">
+                    Marcar Entregado {{ pedidosSeleccionados.length > 0 ? '(' + pedidosSeleccionados.length + ')' : '' }}
+                </button>
+                <button class="btn-accion cancelado" 
+                        [disabled]="pedidosSeleccionados.length === 0"
+                        (click)="cancelarPedidos()">
+                    Cancelar {{ pedidosSeleccionados.length > 0 ? '(' + pedidosSeleccionados.length + ')' : '' }}
+                </button>
+                <button class="btn-accion danger" 
+                        [disabled]="pedidosSeleccionados.length === 0"
+                        (click)="eliminarSeleccionados()">
+                    Eliminar {{ pedidosSeleccionados.length > 0 ? '(' + pedidosSeleccionados.length + ')' : '' }}
+                </button>
+                <button class="btn-accion clear" 
+                        [disabled]="pedidosSeleccionados.length === 0"
+                        (click)="limpiarSeleccion()">
+                    Limpiar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Estado de carga -->
+    <div *ngIf="cargando" class="loading-state">
+        <div class="skeleton-card" *ngFor="let item of [1,2,3,4]"></div>
+    </div>
+
+    <!-- Estado vacío -->
+    <div *ngIf="!cargando && pedidosFiltrados.length === 0" class="empty-state">
+        <h3>No se encontraron pedidos</h3>
+        <p>{{ terminoBusqueda ? 'Intenta con otro término de búsqueda' : 'No hay pedidos registrados' }}</p>
+    </div>
+
+    <!-- Lista de pedidos -->
+    <section class="pedidos-list" *ngIf="!cargando && pedidosFiltrados.length > 0">
+        <h2 class="section-title">{{ categoriaSeleccionada }}</h2>
+        <div class="list-grid">
+            <div class="pedido-card" 
+                 *ngFor="let pedido of pedidosFiltrados"
+                 [class.selected]="estaSeleccionado(pedido)"
+                 (click)="seleccionarPedido(pedido)">
+                
+                <!-- Fila superior -->
+                <div class="pedido-labels">
+                    <div>
+                        ID de pedido<br>
+                        <strong>{{ formatearIdPedido(pedido.id_pedido) }}</strong>
+                    </div>
+                    <div style="text-align:center;">Costo</div>
+                    <div>Fecha<br>pedido</div>
+                    <div>Llegada<br>estimada</div>
+                    <div class="estado-badge" [ngClass]="getBadgeClass(pedido.estado)">
+                        {{ pedido.estado || 'Pendiente' }}
+                    </div>
+                </div>
+
+                <!-- Línea divisoria -->
+                <div class="divisor"></div>
+
+                <!-- Fila inferior -->
+                <div class="pedido-contenido">
+                    <div class="info-producto">
+                        <p>{{ pedido.proveedor }}</p>
+                        <p>Item: {{ pedido.item }}</p>
+                        <p>Cantidad: {{ pedido.cantidad }}</p>
+                        <p>Unidad: {{ pedido.unidad }}</p>
+                        <p>Tipo: {{ getTipoTexto(pedido.tipo) }}</p>
+                    </div>
+                    <div>${{ pedido.precio | number:'1.0-0' }}</div>
+                    <div>{{ pedido.fecha_pedido | date:'dd/MM/yyyy' }}</div>
+                    <div>{{ pedido.fecha_llegada | date:'dd/MM/yyyy' }}</div>
+                    
+                </div>
+
+                <!-- Indicador de selección -->
+                <div class="selection-indicator" *ngIf="estaSeleccionado(pedido)">
+                    <span class="checkmark">✓</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

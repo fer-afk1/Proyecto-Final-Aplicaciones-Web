@@ -1,0 +1,94 @@
+<div class="alertas-page">
+    <header class="alertas-header">
+        <h1>Alertas de Inventario</h1>
+        <p class="subtitle">Monitorea el estado de tus insumos</p>
+    </header>
+
+
+    <!-- Filtros de categoría -->
+    <section class="categorias">
+        <div class="category-filters">
+            <button class="filter-button" [class.active]="categoriaSeleccionada === 'Todas'" (click)="filtrarPorCategoria('Todas')">
+                <span class="filter-label">Todas</span>
+            </button>
+            <button class="filter-button stock-bajo-btn" [class.active]="categoriaSeleccionada === 'Stock Bajo'" (click)="filtrarPorCategoria('Stock Bajo')">
+                <span class="filter-label">Stock Bajo</span>
+            </button>
+            <button class="filter-button sin-stock-btn" [class.active]="categoriaSeleccionada === 'Sin Stock'" (click)="filtrarPorCategoria('Sin Stock')">
+                <span class="filter-label">Sin Stock</span>
+            </button>
+            <button class="filter-button por-caducar-btn" [class.active]="categoriaSeleccionada === 'Por Caducar'" (click)="filtrarPorCategoria('Por Caducar')">
+                <span class="filter-label">Por Caducar</span>
+            </button>
+            <button class="filter-button caducados-btn" [class.active]="categoriaSeleccionada === 'Caducados'" (click)="filtrarPorCategoria('Caducados')">
+                <span class="filter-label">Caducados</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Estado de carga -->
+    <div *ngIf="cargando" class="loading-state">
+        <div class="skeleton-card" *ngFor="let item of [1,2,3,4]"></div>
+    </div>
+
+    <!-- Estado vacío -->
+    <div *ngIf="!cargando && alertasFiltradas.length === 0" class="empty-state">
+        <div class="empty-icon"></div>
+        <h3>¡Todo está en orden!</h3>
+        <p>No hay alertas de {{ categoriaSeleccionada.toLowerCase() }}</p>
+    </div>
+
+    <!-- Lista de alertas -->
+    <section class="alertas-list" *ngIf="!cargando && alertasFiltradas.length > 0">
+        <h2 class="section-title">{{ categoriaSeleccionada }} ({{ alertasFiltradas.length }})</h2>
+        <div class="list-grid">
+            <div class="alerta-item" 
+                 *ngFor="let alerta of alertasFiltradas"
+                 [ngClass]="getAlertaClass(alerta)">
+                
+                <!-- Icono de alerta -->
+                <div class="alerta-badge">
+                    <span>{{ getAlertaIcono(alerta) }}</span>
+                </div>
+
+                <!-- Información del insumo -->
+                <div class="insumo-detalle">
+                    <h3 class="insumo-nombre">{{ alerta.nombre }}</h3>
+                    <p class="insumo-proveedor">{{ alerta.proveedor }}</p>
+                </div>
+
+                <!-- Métricas -->
+                <div class="insumo-metricas">
+                    <div class="metrica">
+                        <span class="metrica-label">Stock Actual</span>
+                        <span class="metrica-valor" [class.critico]="alerta.stock === 0" [class.bajo]="alerta.stock <= alerta.stock_minimo && alerta.stock > 0">
+                            {{ alerta.stock }} {{ alerta.unidad }}
+                        </span>
+                    </div>
+                    <div class="metrica">
+                        <span class="metrica-label">Stock Mínimo</span>
+                        <span class="metrica-valor">{{ alerta.stock_minimo }} {{ alerta.unidad }}</span>
+                    </div>
+                    <div class="metrica" *ngIf="alerta.fecha_caducidad">
+                        <span class="metrica-label">Caducidad</span>
+                        <span class="metrica-valor" [class.caducado]="esCaducado(alerta)" [class.pronto]="esPorCaducar(alerta)">
+                            {{ alerta.fecha_caducidad | date:'dd/MM/yyyy' }}
+                        </span>
+                    </div>
+                    <div class="metrica">
+                        <span class="metrica-label">Precio</span>
+                        <span class="metrica-valor">${{ alerta.precio }}</span>
+                    </div>
+                </div>
+
+                <!-- Tipo de alerta -->
+                <div class="tipo-alerta">
+                    <span class="alerta-tag" *ngIf="alerta.stock === 0">Sin Stock</span>
+                    <span class="alerta-tag stock-bajo" *ngIf="alerta.stock > 0 && alerta.stock <= alerta.stock_minimo">Stock Bajo</span>
+                    <span class="alerta-tag caducado" *ngIf="esCaducado(alerta)">Caducado</span>
+                    <span class="alerta-tag por-caducar" *ngIf="esPorCaducar(alerta) && !esCaducado(alerta)">Por Caducar</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

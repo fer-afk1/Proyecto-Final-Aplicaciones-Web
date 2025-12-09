@@ -1,0 +1,565 @@
+/* ===== Página de Insumos ===== */
+.insumos-page {
+    margin: 0 80px;
+    padding: 40px 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* Header */
+.insumos-header h1 {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--dark-brown);
+    margin-bottom: 5px;
+}
+
+.insumos-header .subtitle {
+    color: var(--text-gray);
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+/* ===== Barra de Búsqueda ===== */
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 2px solid var(--border-light);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 40px;
+    width: 100%;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.search-container:focus-within {
+    border-color: var(--primary-brown);
+    box-shadow: 0 0 0 3px rgba(141, 122, 99, 0.15);
+}
+
+.search-icon {
+    position: absolute;
+    padding: 10px 12px;
+    left: 0;
+    border-radius: 12px 0 0 12px;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon .icon {
+    width: 30px;
+    height: 30px;
+}
+
+.search-input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    color: var(--text-dark);
+    margin-left: 60px;
+}
+
+.search-input::placeholder {
+    color: #9a8b7a;
+}
+
+/* ===== Categorías ===== */
+.categorias {
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--dark-brown);
+    margin-bottom: 20px;
+}
+
+.category-filters {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 8px 0;
+}
+
+.filter-button {
+    flex-shrink: 0;
+    background-color: white;
+    border: 2px solid #2d2a0f2e;
+    border-radius: 30px;
+    padding: 10px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 120px;
+}
+
+.filter-button.active {
+    background-color: #2d2a0f;
+    border-color: var(--dark-brown);
+    color: rgb(255, 255, 255);
+}
+
+.filter-button.active .filter-label {
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+}
+
+.filter-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+/* ===== Barra de Acciones ===== */
+.acciones-section {
+    margin-bottom: 32px;
+}
+
+.acciones-container {
+    background-color: white;
+    border: 2px solid var(--border-light);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.selection-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    flex: 1;
+}
+
+.selection-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #2d2a0f;
+    color: white;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    animation: chipSlideIn 0.3s ease;
+}
+
+@keyframes chipSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.chip-name {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btn-chip-remove {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    line-height: 1;
+    transition: all 0.2s;
+}
+
+.btn-chip-remove:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.selection-count {
+    padding: 6px 12px;
+    background: #f3f4f6;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.acciones-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-accion {
+    padding: 12px 24px;
+    border: 2px solid #2d2a0f2e;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    background: white;
+    color: rgb(0, 0, 0);
+}
+
+.btn-accion:hover:not(:disabled) {
+    background: #2d2a0f;
+    color: white;
+}
+
+.btn-accion:disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.6;
+    border-color: #e5e7eb;
+}
+
+.btn-accion.clear {
+    background: #000000;
+    color: white;
+    border: 2px solid #2d2a0f2e;
+}
+
+.btn-accion.clear:hover:not(:disabled) {
+    background: #ffffff;
+    color: rgb(0, 0, 0);
+    border: 2px solid #2d2a0f2e;
+}
+
+/* ===== Estados de Carga y Vacío ===== */
+.loading-state {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    border-radius: 12px;
+    border: 2px dashed var(--border-light);
+}
+
+.empty-state h3 {
+    font-size: 20px;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: var(--text-gray);
+    margin-bottom: 0;
+}
+
+/* ===== Lista de Insumos ===== */
+.insumos-list {
+    margin-bottom: 50px;
+}
+
+.list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.insumo-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(62, 59, 19, 0.08);
+    border: 2px solid var(--border-light);
+    padding: 24px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.insumo-card:hover {
+    box-shadow: 0 6px 16px rgba(62, 59, 19, 0.12);
+    transform: translateY(-4px);
+    border-color: var(--light-brown);
+}
+
+.insumo-card.selected {
+    border: 2px solid #3f3333;
+    box-shadow: 0 0 0 1px rgba(63, 51, 51, 0.1);
+}
+
+/* Punto de estado - SOLO ESTOS COLORES DIFERENTES */
+.status-dot {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    right: 25px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-bottom: 50px;
+}
+
+.status-stock-ok {
+    background-color: #3ba440; /* Verde de proveedores */
+}
+
+.status-stock-bajo {
+    background-color: #d9b606; /* Amarillo de proveedores */
+}
+
+.status-sin-stock {
+    background-color: #ef4444; /* Rojo */
+}
+
+/* Nombre del insumo */
+.insumo-nombre {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 16px 0;
+    padding-right: 30px;
+}
+
+/* Información del insumo */
+.insumo-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.insumo-info p {
+    font-size: 13px;
+    color: var(--text-gray);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.insumo-info strong {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+/* Colores de stock - SOLO ESTOS DIFERENTES */
+.stock-verde {
+    color: #3ba440; /* Verde de proveedores */
+    font-weight: 700;
+}
+
+.stock-amarillo {
+    color: #d9b606; /* Amarillo de proveedores */
+    font-weight: 700;
+}
+
+.stock-rojo {
+    color: #ef4444; /* Rojo */
+    font-weight: 700;
+}
+
+/* Indicador de selección */
+.selection-indicator {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    background: #2d2a0f;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    animation: checkmark 0.3s ease;
+}
+
+@keyframes checkmark {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.checkmark {
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/* ===== Modales ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+    position: relative;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.form-modal {
+    padding: 32px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--bg-cream);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--text-dark);
+    transition: all 0.3s;
+}
+
+.close-btn:hover {
+    background: var(--error);
+    color: white;
+    transform: rotate(90deg);
+}
+
+/* Indicador de cola */
+.queue-indicator {
+    background: #fef3c7;
+    border: 2px solid #fbbf24;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #92400e;
+}
+
+.queue-remaining {
+    background: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1200px) {
+    .list-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .insumos-page {
+        margin: 0 40px;
+    }
+    
+    .list-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    
+    .acciones-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .selection-info {
+        justify-content: center;
+    }
+    
+    .acciones-buttons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .insumos-page {
+        margin: 0 20px;
+        padding: 20px 10px 40px 10px;
+    }
+    
+    .list-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .insumos-header h1 {
+        font-size: 32px;
+    }
+    
+    .acciones-container {
+        padding: 16px;
+    }
+    
+    .acciones-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-accion {
+        width: 100%;
+        justify-content: center;
+    }
+}

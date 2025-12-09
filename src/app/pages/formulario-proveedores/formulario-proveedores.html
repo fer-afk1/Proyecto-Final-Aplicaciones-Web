@@ -1,0 +1,57 @@
+<div class="form-container">
+
+    @if (idEditar) {
+        <h2>Editar Proveedor</h2>
+    } @else {
+        <h2>Nuevo Proveedor</h2>
+    }
+
+    @if (error) {
+        <div class="error-message">{{ error }}</div>
+    }
+
+    <form [formGroup]="proveedorForm" (ngSubmit)="guardar()">
+
+        <label>Nombre *</label>
+        <input type="text" formControlName="nombre">
+
+        <label>Categoría *</label>
+        <select formControlName="categoria">
+            <option value="Insumos">Insumos</option>
+            <option value="Productos">Productos</option>
+            <option value="Insumos/Productos">Insumos/Productos</option>
+        </select>
+
+        <label>Item *</label>
+        <input type="text" formControlName="item">
+
+        <label>Correo *</label>
+        <input type="email" formControlName="correo">
+
+        <label>Teléfono</label>
+        <input type="text" formControlName="telefono">
+
+        <label>Dirección *</label>
+        <input type="text" formControlName="direccion">
+
+        <label>Contacto *</label>
+        <input type="text" formControlName="contacto">
+
+        <div class="form-buttons">
+            <button type="button" class="btn-cancelar" (click)="cancelar()">
+                Cancelar
+            </button>
+            <button type="submit" class="btn-guardar" [disabled]="proveedorForm.invalid || cargando">
+                @if (cargando) {
+                    Guardando...
+                } @else if (idEditar) {
+                    Actualizar
+                } @else {
+                    Guardar
+                }
+            </button>
+        </div>
+
+    </form>
+
+</div>

@@ -1,0 +1,104 @@
+<div class="dashboard">
+        <section class="estado-actual">
+            <h2 class="section-title">Estado Actual</h2>
+            <div class="stats-grid">
+                
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <div class="stat-number">36</div>
+                        <div class="stat-label">Total de Productos</div>
+                    </div>
+                    <div class="stat-icon">
+                        <img src="imagenes/coffe.png" alt="cafe" class="icon">
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Productos sin Stock</div>
+                    </div>
+                    <div class="stat-icon">
+                        <img src="imagenes/sinCafe.png" alt="cafe" class="icon">
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Insumos Bajos/Caducados</div>
+                    </div>
+                    <div class="stat-icon">
+                        <img src="imagenes/bajo.png" alt="cafe" class="icon">
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Nuestros Proveedores</div>
+                    </div>
+                    <div class="stat-icon">
+                        <img src="imagenes/camion.png" alt="cafe" class="icon">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="acciones">
+            <h2 class="section-title">Acciones</h2>
+            <div class="actions-grid">
+                
+                <div class="action-card" onclick="handleAction('registrar')">
+                    <div class="action-icon-container">
+                         <img src="imagenes/agregar.png" alt="cafe" class="icon">
+                    </div>
+                    <div class="action-label">Registrar</div>
+                </div>
+
+                <div class="action-card" onclick="handleAction('actualizar')">
+                    <div class="action-icon-container">
+                        <img src="imagenes/actualizar.png" alt="cafe" class="icon">
+                    </div>
+                    <div class="action-label">Actualizar</div>
+                </div>
+
+                <div class="action-card" onclick="handleAction('borrar')">
+                    <div class="action-icon-container">
+                        <img src="imagenes/borrar.png" alt="cafe" class="icon">
+                    </div>
+                    <div class="action-label">Borrar</div>
+                </div>
+
+                <div class="action-card" onclick="handleAction('inventario')">
+                    <div class="action-icon-container">
+                        <img src="imagenes/ver.png" alt="cafe" class="icon">
+                    </div>
+                    <div class="action-label">Ver inventario</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function handleAction(action) {
+            switch(action) {
+                case 'registrar':
+                    alert('Redirigiendo a Registrar nuevo elemento...');
+                    // window.location.href = '/registrar';
+                    break;
+                case 'actualizar':
+                    alert('Redirigiendo a Actualizar elementos...');
+                    // window.location.href = '/actualizar';
+                    break;
+                case 'borrar':
+                    alert('Redirigiendo a Borrar elementos...');
+                    // window.location.href = '/borrar';
+                    break;
+                case 'inventario':
+                    alert('Redirigiendo a Ver inventario...');
+                    // window.location.href = '/inventario';
+                    break;
+            }
+        }
+    </script>
